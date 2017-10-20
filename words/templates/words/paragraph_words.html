@@ -1,0 +1,83 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Paragraph Words</title>
+  <meta name="showing all words from database" content="words">
+  <meta name="Sukhdev Singh" content="singhsukhdev1415@gmail.com">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  {% load static %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'words/style_words.css' %}">
+  <script src = "{% static 'words/script.js' %}"></script>
+
+</head>
+
+<body>
+  <div class="block-container">
+    <div class = 'my-header text-center'>
+    <a href="{% url 'words:main' %}" style="color: black;text-decoration: none;">
+    Words
+    </a>
+    </div>
+  </div> 
+  <div class='nav-div'>
+    <ul class="nav-bar">
+      <a href="{% url 'words:save_word_page' %}" class = "nav-list-link">
+        <li class = "nav-list-item move-left">Add</li>
+      </a>
+      <a href="{% url 'words:paragraph_reading' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Paragraph</li></a>
+      <div class = "nav-list-link">
+          
+
+      <a href="{% url 'words:show_all_words' %}" class = "nav-list-link"><li class = "nav-list-item move-right">All Words</li></a>
+      <a href="{% url 'words:main' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Home</li></a>
+      
+      </div>
+    </ul>
+  </div>
+
+<div class="text-center container">
+  {% for word in words %}
+   <form class="form-inline" action="{% url 'words:save_word_para' word=word %}" enctype="multipart/form-data" method="POST" >
+    {%csrf_token%}
+    <div class="form-group">
+      <label for="word">Word :</label>
+      <input type="text" class="form-control" name="word" value={{word}} readonly="true">
+    </div>
+    <div class="form-group">
+      <label for="meaning">Meaning :</label>
+      <input type="text" class="form-control" name="meaning" placeholder="Meaning in English">
+    </div>
+    <br>
+    <div class="form-group">
+      <label for="hindi">Hindi :</label>
+      <input type="text" class="form-control" name="hindi" placeholder="Hindi">
+    </div>
+    <div class="form-group">
+      <label for="punjabi">Punjabi :</label>
+      <input type="text" class="form-control" name="punjabi" placeholder="Punjabi">
+    </div>
+    <br>
+
+    <div class="form-group">
+      <label for="sentence">Sentence :</label>
+      <input type="text" class="form-control" name="sentence" placeholder="Sentence">
+    </div>
+
+    <a href="{% url 'words:save_word_para' word=word %}">
+      <button type="submit" class="btn btn-default">Add Word</button>
+    </a>
+  </form>
+  {% endfor %}
+</div>
+    
+  	<!-- <div class = "container">
+      <div class = "item_temp">
+        <h1>{{ word }}</h1>
+      </div>
+  </div> -->
+</body>
+</html>

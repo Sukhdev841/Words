@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>New Word</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  
+  {% load static %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'words/style_words.css' %}">
+  <script src = "{% static 'words/script.js' %}"></script>
+
+</head>
+<body>
+  <div class="block-container">
+    <div class = 'my-header text-center'>
+    <a href="{% url 'words:main' %}" style="color: black;text-decoration: none;">
+    Words
+    </a>
+    </div>
+  </div> 
+  <div class='nav-div'>
+    <ul class="nav-bar">
+      {% if edit %}
+      <a href="{% url 'words:save_word_page' %}" class = "nav-list-link">
+        <li class = "nav-list-item move-left">Add</li>
+      </a>
+      {% endif %}
+      <a href="{% url 'words:paragraph_reading' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Paragraph</li></a>
+      <div class = "nav-list-link">
+          
+
+      <a href="{% url 'words:show_all_words' %}" class = "nav-list-link"><li class = "nav-list-item move-right">All Words</li></a>
+      <a href="{% url 'words:main' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Home</li></a>
+      
+      </div>
+    </ul>
+  </div>
+
+<div class="container" style="margin-top:60px;">
+  {% if edit %}
+    <form action="{% url 'words:edit' word=word %}" enctype="multipart/form-data" method="POST" >
+  {% else %}
+    <form action="{% url 'words:save' %}" enctype="multipart/form-data" method="POST" >
+  {% endif %}
+  {%csrf_token%}
+    {% if word %}
+      <div class="form-group">
+        <label for="word">Word :</label>
+        <input type="text" class="form-control" id="id" name="word" value={{word}} readonly="true">
+      </div>
+    {% else %}
+      <div class="form-group">
+        <label for="word">Word:</label>
+        <input type="text" class="form-control" id="id" placeholder="Word" name="word">
+      </div>
+    {% endif %}
+    {% if meaning %}
+      <div class="form-group">
+        <label for="meaning">Meaning:</label>
+        <input type="text" class="form-control" id="id" value='{{meaning}}' name="meaning">
+      </div>
+    {% else %}
+      <div class="form-group">
+        <label for="meaning">Meaning :</label>
+        <input type="text" class="form-control" id="id" placeholder="Meaning" name="meaning">
+      </div>
+    {% endif %}
+    {% if hindi %}
+      <div class="form-group">
+        <label for="hindi">Hindi :</label>
+        <input type="text" class="form-control" id="id" value='{{hindi}}' name="hindi">
+      </div>
+    {% else %}
+      <div class="form-group">
+        <label for="hindi">Hindi :</label>
+        <input type="text" class="form-control" id="id" placeholder="Meaning in Hindi" name="hindi">
+      </div>
+    {% endif %}
+    {% if punjabi %}
+      <div class="form-group">
+        <label for="punjabi">Punjabi :</label>
+        <input type="text" class="form-control" id="id" value='{{punjabi}}' name="punjabi">
+      </div>
+    {% else %}
+      <div class="form-group">
+        <label for="punjabi">Punjabi :</label>
+        <input type="text" class="form-control" id="id" placeholder="Meaning in Punjabi" name="punjabi">
+      </div>
+    {% endif %}
+    <div class="form-group">
+      <label for="sentence">Example Sentence:</label>
+      {% if sentence %}
+        <input type="text" class="form-control" id="id" placeholder="Example Sentence" name="sentence" value='{{sentence}}'>
+      {% else %}
+        <input type="text" class="form-control" id="id" placeholder="Example Sentence" name="sentence">
+      {% endif %}
+    </div>
+    {% if edit %}
+      <button type="submit" class="btn btn-default" value="submit" style="width:100%;">Update Word</button>
+    {% else %}
+      <button type="submit" class="btn btn-default" value="submit" style="width:100%;">Add Word</button>
+    {% endif %}
+  </form>
+
+
+  {% if edit %}
+  <br>
+  <a class="simple" href = "{% url 'words:delete_word' word=word %}">
+    <button ype="submit" class="btn btn-default" value="submit" style="width:100%;">Delete Word</button>
+  </a>
+      <!-- <button type="submit" class="btn btn-default" value="submit">Update Word</button> -->
+  {% endif %}
+
+  {% if show_message %}
+  <div class="text-center" style="background-color: black;color:white;margin:10px;">
+    <p>{{message}}</p>
+  <div>
+  {% endif %}
+</div>
+
+</body>
+</html>
