@@ -63,7 +63,7 @@ def update_word_page(request,word):
 		word_obj = Word.objects.get(word=word)
 		return render(request,'words/new_word.html',{"word":word_obj.word,"meaning":word_obj.meaning,
 													"sentence":word_obj.sentence,"punjabi":word_obj.punjabi,
-													"hindi":word_obj.hindi,'edit':True})
+													"hindi":word_obj.hindi,"tags":word_obj.tags,'edit':True})
 	except:
 		return render(request,'words/new_word.html',{'show_message':True,"message":'word not found'})
 
@@ -91,6 +91,7 @@ def save_word(request):
 				sentence = request.POST.get('sentence','')
 				hindi = request.POST.get('hindi','')
 				punjabi = request.POST.get('punjabi','')
+				tags = request.POST.get('tags','')
 
 				if meaning == "":
 					meaning = "not defined"
@@ -98,7 +99,7 @@ def save_word(request):
 				if sentence == "":
 					sentence = "not defined"
 
-				word_obj = Word(word = word,meaning = meaning, sentence = sentence,hindi=hindi,punjabi=punjabi)
+				word_obj = Word(word = word,meaning = meaning, sentence = sentence,hindi=hindi,punjabi=punjabi,tags =tags)
 				word_obj.save()
 				print(word+" is successfully saved in database.")
 				return render(request,'words/new_word.html',{'show_message':True,'message':'Sucessfully Saved.'})
@@ -118,22 +119,23 @@ def delete_word(request,word):
 
 def update_word(request,word):
 	print ("updating a word in database")
-	delete_word(request,word);
+	
 	if request.method == 'POST':
 
 		form = WordForm(request.POST)
 		if len(form["word"].value()) is not 0:
+			delete_word(request,word);
 			word = request.POST.get('word')
 			meaning = request.POST.get('meaning','')
 			sentence = request.POST.get('sentence','')
 			hindi = request.POST.get('hindi','')
 			punjabi = request.POST.get('punjabi','')
-
-			word_obj = Word(word = word,meaning = meaning, sentence = sentence,hindi=hindi,punjabi=punjabi)
+			tags = request.POST.get('tags','')
+			word_obj = Word(word = word,meaning = meaning, sentence = sentence,hindi=hindi,punjabi=punjabi,tags=tags)
 			word_obj.save()
 			print(word+" is successfully updated in database.")
 			return render(request,'words/new_word.html',{"word":word_obj.word,"meaning":word_obj.meaning,"hindi":word_obj.hindi,"punjabi":word_obj.punjabi,
-													"sentence":word_obj.sentence,"edit":'true','show_message':True,'message':'Sucessfully Updated'})
+													"sentence":word_obj.sentence,"tags":word_obj.tags,"edit":'true','show_message':True,'message':'Sucessfully Updated'})
 
 		else:
 			print("form is invalid")

@@ -43,50 +43,43 @@
     <form action="{% url 'words:save_word' %}" enctype="multipart/form-data" method="POST" >
   {% endif %}
   {%csrf_token%}
-    {% if word %}
-      <div class="form-group">
+
+    <div class="form-group">
         <label for="word">Word :</label>
+    {% if word %}
         <input type="text" class="form-control" id="id" name="word" value={{word}} readonly="true">
-      </div>
     {% else %}
-      <div class="form-group">
-        <label for="word">Word:</label>
         <input type="text" class="form-control" id="id" placeholder="Word" name="word">
-      </div>
     {% endif %}
-    {% if meaning %}
-      <div class="form-group">
+    </div>
+
+    <div class="form-group">
         <label for="meaning">Meaning:</label>
+    {% if meaning %}
         <input type="text" class="form-control" id="id" value='{{meaning}}' name="meaning">
-      </div>
     {% else %}
-      <div class="form-group">
-        <label for="meaning">Meaning :</label>
         <input type="text" class="form-control" id="id" placeholder="Meaning" name="meaning">
-      </div>
     {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="hindi">Hindi :</label>
     {% if hindi %}
-      <div class="form-group">
-        <label for="hindi">Hindi :</label>
         <input type="text" class="form-control" id="id" value='{{hindi}}' name="hindi">
-      </div>
     {% else %}
-      <div class="form-group">
-        <label for="hindi">Hindi :</label>
         <input type="text" class="form-control" id="id" placeholder="Meaning in Hindi" name="hindi">
-      </div>
     {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="punjabi">Punjabi :</label>
     {% if punjabi %}
-      <div class="form-group">
-        <label for="punjabi">Punjabi :</label>
         <input type="text" class="form-control" id="id" value='{{punjabi}}' name="punjabi">
-      </div>
     {% else %}
-      <div class="form-group">
-        <label for="punjabi">Punjabi :</label>
         <input type="text" class="form-control" id="id" placeholder="Meaning in Punjabi" name="punjabi">
-      </div>
     {% endif %}
+    </div>
+
     <div class="form-group">
       <label for="sentence">Example Sentence:</label>
       {% if sentence %}
@@ -95,6 +88,16 @@
         <input type="text" class="form-control" id="id" placeholder="Example Sentence" name="sentence">
       {% endif %}
     </div>
+
+    <div class="form-group">
+        <label for="punjabi">Tags :</label>
+    {% if tags %}
+        <input type="text" class="form-control" id="id" value='{{tags}}' name="tags">
+    {% else %}
+        <input type="text" class="form-control" id="id" placeholder="Tags separated by comma ','" name="tags">
+    {% endif %}
+    </div>
+
     {% if edit %}
       <button type="submit" class="btn btn-default" value="submit" style="width:100%;">Update Word</button>
     {% else %}
