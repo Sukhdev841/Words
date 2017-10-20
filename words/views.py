@@ -14,7 +14,7 @@ from suk import extract_words
 import random
 # Create your views here.
 
-def main(request):
+def main_page(request):
 	print ("in main view")
 	all_words = Word.objects.all()
 	list_of_words = []
@@ -44,10 +44,11 @@ def main(request):
 	# select random 10 words from database
 	return render(request,'words/show_words.html',{"home":True,"list":list_of_words})
 
-def save_word_page(request):
+# views redirecting to pages
+def new_word_page(request):
 	return render(request,'words/new_word.html')
 
-def show_all_words(request,message=None):
+def all_words_page(request,message=None):
 	all_words = Word.objects.all()
 	for x in all_words:
 		print (x.word + " "+ x.meaning)
@@ -56,19 +57,7 @@ def show_all_words(request,message=None):
 	else:
 		return render(request,'words/show_words.html',{"list":all_words,'show_message':True,'message':message})
 
-def redirect(request,page):
-	page_address = 'words/'+page
-	return render(request,page_address)
-
-def delete_word(request,word):
-	print (word + "is parameter to delete_word view")
-	Word.objects.filter(word=word).delete()
-	#all_words = Word.objects.all()
-	##for x in all_words:
-		# print (x.word + " "+ x.meaning)
-	return show_all_words(request,word+' is successfully deleted.')
-
-def edit_word(request,word):
+def update_word_page(request,word):
 	print (word + "is parameter to delete_word view")
 	try:
 		word_obj = Word.objects.get(word=word)
@@ -78,35 +67,7 @@ def edit_word(request,word):
 	except:
 		return render(request,'words/new_word.html',{'show_message':True,"message":'word not found'})
 
-def search(request):
-	if request.method == 'POST':
-
-		form = SearchForm(request.POST)
-		if len(form["search_field"].value()) is not 0:
-			word = request.POST.get('search_field')
-
-			if word == "":
-				return render(request,'words/home.html')
-			x = []
-			word = word.lower()
-			try:
-				word_obj = Word.objects.get(word=word)
-			except:
-				try:
-					word_obj = Word.objects.get(hindi=word)
-				except:
-					try:
-						word_obj = Word.objects.get(punjabi=word)
-					except:
-						return show_all_words(request,"not found") 
-			x.append(word_obj)
-			print(word_obj.word+" is successfully found in database.")
-			return render(request,'words/show_words.html',{"list":x})
-
-		else:
-			print("search form is invalid")
-			return show_all_words(request)
-	return show_all_words(request,"not found")
+# insertion views
 
 def save_word(request):
 	print ("saving a word into database")
@@ -146,46 +107,16 @@ def save_word(request):
 			print("form is invalid")
 			return render(request,'words/new_word.html',{'show_message':True,'message':'Saving Failed'})
 
-def paragraph_reading(request):
-	return redirect(request,'paragraph_reading.html')
+# deletion views
 
-def paragraph_reading_submition(request):
-	paragraph=""
-	words = []
-	if request.method == 'POST':
-		temp_words = []
-		form = ParagraphForm(request.POST)
-		paragraph = request.POST.get('paragraph_field','')
-		new_par = ''
-		temp_word =''
-		for x in paragraph:
-			#print (x + "\n")
-			if x.isalpha():
-				temp_word = ''.join((temp_word,x))
-			elif x == ' ' or x == '\n' or x == '\r':
-				if temp_word is not '':
-					temp_words.append(temp_word)
-					print (temp_word)
-				temp_word =''
-		if temp_word is not '':
-			temp_words.append(temp_word)
+def delete_word(request,word):
+	print (word + "is parameter to delete_word view")
+	Word.objects.filter(word=word).delete()
+	return all_words_page(request,word+' is successfully deleted.')
 
-		print (temp_words)
+# updation views
 
-		for word in temp_words:
-			if Word.objects.filter(word=word).count() is 0:
-				words.append(word)
-					
-		
-
-	return render(request,'words/paragraph_words.html',{"words":words})
-
-def save_word_paragraph(request,word):
-	print ("recieved " + word)
-	save_word(request)
-	return render(request,'words/paragraph_words.html')
-
-def edit_commit_word(request,word):
+def update_word(request,word):
 	print ("updating a word in database")
 	delete_word(request,word);
 	if request.method == 'POST':
@@ -207,4 +138,39 @@ def edit_commit_word(request,word):
 		else:
 			print("form is invalid")
 			return render(request,'words/new_word.html',{'show_message':True,'message':'Updation Failed'})
+
+
+# other views
+
+
+# for searching
+def search(request):
+	if request.method == 'POST':
+
+		form = SearchForm(request.POST)
+		if len(form["search_field"].value()) is not 0:
+			word = request.POST.get('search_field')
+
+			if word == "":
+				return render(request,'words/home.html')
+			x = []
+			word = word.lower()
+			try:
+				word_obj = Word.objects.get(word=word)
+			except:
+				try:
+					word_obj = Word.objects.get(hindi=word)
+				except:
+					try:
+						word_obj = Word.objects.get(punjabi=word)
+					except:
+						return all_words_page(request,"not found") 
+			x.append(word_obj)
+			print(word_obj.word+" is successfully found in database.")
+			return render(request,'words/show_words.html',{"list":x})
+
+		else:
+			print("search form is invalid")
+			return all_words_page(request)
+	return all_words_page(request,"not found")
 

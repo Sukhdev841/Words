@@ -18,7 +18,7 @@
 <body>
   <div class="block-container">
     <div class = 'my-header text-center'>
-    <a href="{% url 'words:main' %}" style="color: black;text-decoration: none;">
+    <a href="#" style="color: black;text-decoration: none;">
     Words
     </a>
     </div>
@@ -29,13 +29,13 @@
         <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">New</li></a>
       {% endif %}
       {% if words %}
-        <a href="{% url 'words:save_word_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">New</li></a>
+        <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">New</li></a>
       {% endif %}
       {% if readings %}
-        <a href="{% url 'words:save_reading_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">New</li></a>
+        <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">New</li></a>
       {% endif %}
       {% if not words %}
-      <a href="{% url 'words:save_word_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Add</li></a>
+      <a href="{% url 'words:new_word_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Add</li></a>
       {% endif %}
       <!-- {% if not quotes %}
       <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">Quotes</li></a>
@@ -59,9 +59,9 @@
             </a>
        </form>
           {% if home %}
-            <a href="{% url 'words:show_all_words' %}" class = "nav-list-link"><li class = "nav-list-item move-right">All Words</li></a>
+            <a href="{% url 'words:all_words_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">All Words</li></a>
           {% else %}
-            <a href="{% url 'words:main' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Home</li></a>
+            <a href="{% url 'words:main_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Home</li></a>
           {% endif %}
       
       </div>
@@ -96,7 +96,7 @@
             <button class = "item_link" onclick="myFunc('#{{word.word}}')">Sentence</button>
           </a>
           {% if not home %}
-          <a class = "item_link" href = "{% url 'words:edit_word' word=word.word %}">
+          <a class = "item_link" href = "{% url 'words:update_word_page' word=word.word %}">
             <button class="item_link">Edit</button>
           </a>
           {% endif %}

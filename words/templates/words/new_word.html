@@ -15,7 +15,7 @@
 <body>
   <div class="block-container">
     <div class = 'my-header text-center'>
-    <a href="{% url 'words:main' %}" style="color: black;text-decoration: none;">
+    <a href="#" style="color: black;text-decoration: none;">
     Words
     </a>
     </div>
@@ -23,16 +23,14 @@
   <div class='nav-div'>
     <ul class="nav-bar">
       {% if edit %}
-      <a href="{% url 'words:save_word_page' %}" class = "nav-list-link">
+      <a href="{% url 'words:new_word_page' %}" class = "nav-list-link">
         <li class = "nav-list-item move-left">Add</li>
       </a>
       {% endif %}
-      <a href="{% url 'words:paragraph_reading' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Paragraph</li></a>
-      <div class = "nav-list-link">
           
 
-      <a href="{% url 'words:show_all_words' %}" class = "nav-list-link"><li class = "nav-list-item move-right">All Words</li></a>
-      <a href="{% url 'words:main' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Home</li></a>
+      <a href="{% url 'words:all_words_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">All Words</li></a>
+      <a href="{% url 'words:main_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Home</li></a>
       
       </div>
     </ul>
@@ -40,9 +38,9 @@
 
 <div class="container" style="margin-top:60px;">
   {% if edit %}
-    <form action="{% url 'words:edit' word=word %}" enctype="multipart/form-data" method="POST" >
+    <form action="{% url 'words:update_word' word=word %}" enctype="multipart/form-data" method="POST" >
   {% else %}
-    <form action="{% url 'words:save' %}" enctype="multipart/form-data" method="POST" >
+    <form action="{% url 'words:save_word' %}" enctype="multipart/form-data" method="POST" >
   {% endif %}
   {%csrf_token%}
     {% if word %}
@@ -108,7 +106,7 @@
   {% if edit %}
   <br>
   <a class="simple" href = "{% url 'words:delete_word' word=word %}">
-    <button ype="submit" class="btn btn-default" value="submit" style="width:100%;">Delete Word</button>
+    <button type="submit" class="btn btn-default" value="submit" style="width:100%;">Delete Word</button>
   </a>
       <!-- <button type="submit" class="btn btn-default" value="submit">Update Word</button> -->
   {% endif %}
