@@ -25,17 +25,14 @@
   </div> 
   <div class='nav-div'>
     <ul class="nav-bar">
-      {% if quotes %}
-        <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">New</li></a>
+      {% if not quotes %}
+        <a href="{% url 'words:new_quote_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Quote</li></a>
       {% endif %}
-      {% if words %}
-        <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">New</li></a>
-      {% endif %}
-      {% if readings %}
-        <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">New</li></a>
+      {% if not readings %}
+        <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">Reading</li></a>
       {% endif %}
       {% if not words %}
-      <a href="{% url 'words:new_word_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Add</li></a>
+      <a href="{% url 'words:new_word_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Word</li></a>
       {% endif %}
       <!-- {% if not quotes %}
       <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">Quotes</li></a>
@@ -58,10 +55,16 @@
             </li>
             </a>
        </form>
-          {% if home %}
-            <a href="{% url 'words:all_words_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">All Words</li></a>
-          {% else %}
+          {% if not home %}
             <a href="{% url 'words:main_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Home</li></a>
+          }
+          {% endif %}
+          {% if not words %}
+            <a href="{% url 'words:all_words_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">All Words</li></a>
+          {% endif %}
+
+          {% if not quotes %}
+            <a href="{% url 'words:all_quotes_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Quotes</li></a>
           {% endif %}
       
       </div>
@@ -69,13 +72,11 @@
   </div>
 
   
+  {% if page_header %}
     <div class="page-header text-center">
-    {% if home %}
-      <h1>Random 10 Words</h1>
-    {% else %}
-      <h1>All Words</h1>      
-    {% endif %}
+      <h1>{{ page_header }}</h1>
     </div>
+  {% endif %}
 
   {% if show_message %}
     <div class="text-center" style="background-color: black;color:white;padding: 5px;">
@@ -83,6 +84,8 @@
     </div>
     <div style="background-color: white;width: 100%;height: 10px;"></div>
   {% endif %}
+
+  {% if words or home %}
   <div class="text-center container">
     {% for word in list %}
   	<div class = "container">
@@ -104,6 +107,25 @@
     </div>
     {% endfor %}
   </div>
+  {% endif %}
+
+  {% if quotes %}
+  <div class="text-center container">
+    {% for quote in list %}
+    <div class = "container">
+      <div class = "item_temp">
+        <h1>{{ quote.quote }}</h1>
+          <p class="title">{{ quote.author }}</p>
+          {% if not home %}
+          <a class = "item_link" href = "{% url 'words:update_quote_page' quote=quote.quote %}">
+            <button class="item_link">Edit</button>
+          </a>
+          {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
   
   <div style="background-color: white;text-align: center;color:white;height: 50px;"></div>
 </body>

@@ -16,8 +16,17 @@ class Word(models.Model):
 	tags = models.CharField(max_length=1000,default='word')
 
 class Quote(models.Model):
-	quote_id = models.CharField(max_length=600)
+	#quote_id = models.CharField(max_length=600,default='1')
 	quote = models.CharField(max_length = 500)
 	author = models.CharField(max_length = 50)
+	language = models.CharField(max_length = 30,default='English')
 	date = models.DateTimeField(("Date"),default=datetime.date.today)
 	tags = models.CharField(max_length=1000,default='quote')
+
+class Reading(models.Model):
+	heading = models.CharField(max_length = 50)
+	passage = models.CharField(max_length = 10000)
+	author = models.CharField(max_length = 50)
+	language = models.CharField(max_length = 50,default='English')
+	tags = models.CharField(max_length = 1000,default = 'passage')
+	date = models.DateTimeField(("Date"),default = datetime.date.today)
