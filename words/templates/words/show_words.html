@@ -25,13 +25,13 @@
   </div> 
   <div class='nav-div'>
     <ul class="nav-bar">
-      {% if not quotes %}
+      {% if not disable_new_quote or home %}
         <a href="{% url 'words:new_quote_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Quote</li></a>
       {% endif %}
-      {% if not readings %}
-        <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">Reading</li></a>
+      {% if not disable_new_reading or home %}
+        <a href="{% url 'words:new_reading_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Reading</li></a>
       {% endif %}
-      {% if not words %}
+      {% if not disable_new_word or home %}
       <a href="{% url 'words:new_word_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Word</li></a>
       {% endif %}
       <!-- {% if not quotes %}
@@ -57,12 +57,13 @@
        </form>
           {% if not home %}
             <a href="{% url 'words:main_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Home</li></a>
-          }
           {% endif %}
           {% if not words %}
             <a href="{% url 'words:all_words_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">All Words</li></a>
           {% endif %}
-
+          {% if not reading %}
+          <a href="{% url 'words:all_readings_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Readings</li></a>
+          {% endif %}
           {% if not quotes %}
             <a href="{% url 'words:all_quotes_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Quotes</li></a>
           {% endif %}
@@ -99,7 +100,7 @@
             <button class = "item_link" onclick="myFunc('#{{word.word}}')">Sentence</button>
           </a>
           {% if not home %}
-          <a class = "item_link" href = "{% url 'words:update_word_page' word=word.word %}">
+          <a class = "item_link" href = "{% url 'words:update_word_page' word_id=word.id %}">
             <button class="item_link">Edit</button>
           </a>
           {% endif %}
@@ -117,13 +118,35 @@
         <h1>{{ quote.quote }}</h1>
           <p class="title">{{ quote.author }}</p>
           {% if not home %}
-          <a class = "item_link" href = "{% url 'words:update_quote_page' quote=quote.quote %}">
+          <a class = "item_link" href = "{% url 'words:update_quote_page' quote_id=quote.id %}">
             <button class="item_link">Edit</button>
           </a>
           {% endif %}
       </div>
     </div>
     {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if reading %}
+  <div class = "text-center conatainer">
+  {% for i in list %}
+    <div class = "container">
+      <div class = "item_temp">
+        <h1>{{i.heading}}</h1>
+        <p class="title">{{i.author}}</p>
+        <p class="title">{{i.language}}</p>
+        <a class = "item_link" href = "{% url 'words:full_reading' id=i.id %}">
+        <button class="item_link">Read Full</button>
+        </a>
+        {% if not home %}
+          <a class = "item_link" href = "{% url 'words:update_reading_page' id=i.id %}">
+            <button class="item_link">Edit</button>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
   </div>
   {% endif %}
   

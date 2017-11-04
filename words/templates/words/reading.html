@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<title>Reading</title>
+		<style>
+		div.container
+		{
+			width:100%;
+			border: 1px solid gray;
+		}
+		header,footer
+		{
+			padding:1em;
+			color:white;
+			background-color: black;
+			clear:left;
+			text-align: center;
+		}
+		article
+		{
+			float: left;
+			text-align: center;
+			margin-left: 10px;
+			margin-right: 10px;
+			/*margin-left: 160px;*/
+			/*border-left: 1px solid gray;*/
+			padding: 1em;
+			overflow: hidden;
+		}
+		nav
+		{
+			float: left;
+			max-width: 150px;
+			margin: 0;
+			padding: 1em;
+		}
+		nav ul
+		{
+			list-style-type: none;
+			padding: 0;
+		}
+		</style>
+	</head>
+	<body>
+		<div style="margin-top:30px;text-align: center;padding: 5px;">
+			<header>{{obj.heading}}</header>
+			<div class="container">
+				<!-- <nav>
+					<ul>
+						<li><a href="#">Links</a></li>
+					</ul>
+				</nav> -->
+				<article>
+					{% autoescape off %}{{obj.passage}}{% endautoescape %}
+				</article>
+			</div>
+			<footer>{{obj.author}}</footer>
+		</div>
+	</body>
+</html>
