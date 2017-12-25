@@ -9,8 +9,8 @@
   <meta name="Sukhdev Singh" content="singhsukhdev1415@gmail.com">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   {% load static %}
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{% static 'words/style_words.css' %}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="{% static 'words/style_words.css' %}"/>
   <script src = "{% static 'words/script.js' %}"></script>
   <link rel="shortcut icon" type="image/x-icon" href="{% static 'words/images/favicon.ico' %}" />
 </head>
@@ -33,7 +33,6 @@
       {% endif %}
       {% if not disable_new_word or home %}
       <a href="{% url 'words:new_word_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Word</li></a>
-      <a href="{% url 'words:process_passage_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Process Passage</li></a>
       {% endif %}
       <!-- {% if not quotes %}
       <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">Quotes</li></a>
@@ -87,89 +86,16 @@
     <div style="background-color: white;width: 100%;height: 10px;"></div>
   {% endif %}
 
-  {% if words or home %}
-  <div class="text-center container">
-    {% for word in list %}
-  	<div class = "container">
-      <div class = "item_temp">
-        <h1>{{ word.word }}</h1>
-          <p class="title">{{ word.hindi }}</p>
-          <p class="title">{{ word.punjabi }}</p>
-          <p class="title">{{ word.meaning }}</p>
-          <p class = "word_sentence" id = "{{word.word}}">{{ word.sentence }}</p>
-          <a class = "item_link" href = "#">
-            <button class = "item_link" onclick="myFunc('#{{word.word}}')">Sentence</button>
-          </a>
-          {% if not home %}
-          <a class = "item_link" href = "{% url 'words:update_word_page' word_id=word.id %}">
-            <button class="item_link">Edit</button>
-          </a>
-          {% endif %}
-      </div>
+  <div class="container">
+    <div class="form-group">
+    <form action="{% url 'words:passage-words-page' %}" enctype="multipart/form-data" method="POST" >
+    {%csrf_token%}
+      <textarea name="passage" id="passage" class="form-control" placeholder="Passage"></textarea>
+      <button type="submit" class="btn btn-default" value="submit" style="width:100%;">Submit</button>
+    </form>
     </div>
-    {% endfor %}
   </div>
-  {% endif %}
 
-  {% if quotes %}
-  <div class="text-center container">
-    {% for quote in list %}
-    <div class = "container">
-      <div class = "item_temp">
-        <h1>{{ quote.quote }}</h1>
-          <p class="title">{{ quote.author }}</p>
-          {% if not home %}
-          <a class = "item_link" href = "{% url 'words:update_quote_page' quote_id=quote.id %}">
-            <button class="item_link">Edit</button>
-          </a>
-          {% endif %}
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-  {% endif %}
 
-  {% if reading %}
-  <div class = "text-center conatainer">
-  {% for i in list %}
-    <div class = "container">
-      <div class = "item_temp">
-        <h1>{{i.heading}}</h1>
-        <p class="title">{{i.author}}</p>
-        <p class="title">{{i.language}}</p>
-        <a class = "item_link" href = "{% url 'words:full_reading' id=i.id %}">
-        <button class="item_link">Read Full</button>
-        </a>
-        {% if not home %}
-          <a class = "item_link" href = "{% url 'words:update_reading_page' id=i.id %}">
-            <button class="item_link">Edit</button>
-          </a>
-        {% endif %}
-      </div>
-    </div>
-  {% endfor %}
-  </div>
-  {% endif %}
-
-  {% if words %}
-  <div id="bottom_box">
-    {% if prev %}
-    <a class="next_prev_link" href="{% url 'words:prev_words' %}">
-      <div class = "next_prev">
-          <
-      </div>
-    </a>
-    {% endif %}
-    {% if next %}
-    <a class="next_prev_link" href="{% url 'words:next_words' %}">
-      <div class = "next_prev">
-          >
-      </div>
-    </a>
-    {% endif %}
-  </div>
-  {% endif %}
-  
-  <div style="background-color: white;text-align: center;color:white;height: 50px;"></div>
 </body>
 </html>

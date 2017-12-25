@@ -6,6 +6,9 @@ import datetime
 
 # Create your models here.
 
+class ExceptionWord(models.Model):
+	word = models.CharField(max_length=30)
+
 class Word(models.Model):
 	word = models.CharField(max_length = 30)
 	meaning = models.CharField(max_length = 500,default='english')

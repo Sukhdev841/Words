@@ -4,14 +4,15 @@
   <title>New</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
   
   {% load static %}
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{% static 'words/style_words.css' %}">
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'words/images/favicon.ico' %}" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="{% static 'words/style_words.css' %}"/>
   <script src = "{% static 'words/script.js' %}"></script>
   <script src = "{% static 'words/widgEditor.js' %}"></script>
-  <link rel="stylesheet" href ="{% static 'words/widgEditor.css' %}">
+  <link rel="stylesheet" href ="{% static 'words/widgEditor.css' %}"/>
   <!-- <link rel="stylesheet" href ="{% static 'words/widgContent.css' %}"> -->
 
 </head>
@@ -255,6 +256,7 @@
 
         <button type="submit" class="btn btn-default" value="submit" style="width:100%;">Update Reading</button>
     </form>
+
     <br>
     <a class="simple" href ="{% url 'words:delete_reading' id=id %}">
         <button type="submit" class="btn btn-default" value="submit" style="width:100%;">Delete Reading</button>

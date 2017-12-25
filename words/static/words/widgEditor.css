@@ -156,7 +156,7 @@
 {
 	clear: left;
 	width: 100%;
-	height: 200px;
+	height:  500px;
 	border-top-width: 1px;
 }
 
@@ -164,11 +164,10 @@
 {
 	clear: left;
 	width: 100%;
-	height: 200px;
+	height: 50%;
 	border-top-width: 1px;
 	padding: 0;
 }
-
 
 
 

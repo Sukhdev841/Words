@@ -12,10 +12,14 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="{% static 'words/style_words.css' %}">
   <script src = "{% static 'words/script.js' %}"></script>
+  <script type="text/javascript">
+  var add_passage_word = "{% url 'words:add-passage-word-page' word='word' %}";
+  </script>
   <link rel="shortcut icon" type="image/x-icon" href="{% static 'words/images/favicon.ico' %}" />
 </head>
 
 <body>
+  <div id="new_passage_word_bottom">
   <div class="block-container">
     <div class = 'my-header text-center'>
     <a href="#" style="color: black;text-decoration: none;">
@@ -33,7 +37,6 @@
       {% endif %}
       {% if not disable_new_word or home %}
       <a href="{% url 'words:new_word_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Word</li></a>
-      <a href="{% url 'words:process_passage_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Process Passage</li></a>
       {% endif %}
       <!-- {% if not quotes %}
       <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">Quotes</li></a>
@@ -86,90 +89,52 @@
     </div>
     <div style="background-color: white;width: 100%;height: 10px;"></div>
   {% endif %}
+  </div>
 
-  {% if words or home %}
-  <div class="text-center container">
-    {% for word in list %}
-  	<div class = "container">
-      <div class = "item_temp">
-        <h1>{{ word.word }}</h1>
-          <p class="title">{{ word.hindi }}</p>
-          <p class="title">{{ word.punjabi }}</p>
-          <p class="title">{{ word.meaning }}</p>
-          <p class = "word_sentence" id = "{{word.word}}">{{ word.sentence }}</p>
-          <a class = "item_link" href = "#">
-            <button class = "item_link" onclick="myFunc('#{{word.word}}')">Sentence</button>
-          </a>
-          {% if not home %}
-          <a class = "item_link" href = "{% url 'words:update_word_page' word_id=word.id %}">
-            <button class="item_link">Edit</button>
-          </a>
-          {% endif %}
-      </div>
+
+  <div class="container"  >
+    <div class="page-header" style="text-align: center;">
+      <h3>Add New Word</h3>
     </div>
-    {% endfor %}
-  </div>
-  {% endif %}
+    <form action="{% url 'words:save_passage_word' %}" enctype="multipart/form-data" method="POST" >
+      {%csrf_token%}
+        <div class="form-group">
+            <label for="word">Word :</label>
+            <input type="text" class="form-control" id="word_field" name="word" value={{word}}>
+        </div>
 
-  {% if quotes %}
-  <div class="text-center container">
-    {% for quote in list %}
-    <div class = "container">
-      <div class = "item_temp">
-        <h1>{{ quote.quote }}</h1>
-          <p class="title">{{ quote.author }}</p>
-          {% if not home %}
-          <a class = "item_link" href = "{% url 'words:update_quote_page' quote_id=quote.id %}">
-            <button class="item_link">Edit</button>
-          </a>
-          {% endif %}
-      </div>
+        <div class="form-group">
+          <label for="meaning">Meaning:</label>
+          <input type="text" class="form-control" id="id" placeholder="Meaning" name="meaning">
+        </div>
+
+        <div class="form-group">
+          <label for="hindi">Hindi :</label>
+          <input type="text" class="form-control" id="id" placeholder="Meaning in Hindi" name="hindi">
+        </div>
+
+        <div class="form-group">
+          <label for="punjabi">Punjabi :</label>
+          <input type="text" class="form-control" id="id" placeholder="Meaning in Punjabi" name="punjabi">
+        </div>
+
+        <div class="form-group">
+          <label for="sentence">Example Sentence:</label>
+          <input type="text" class="form-control" id="id" placeholder="Example Sentence" name="sentence">
+        </div>
+
+        <div class="form-group">
+          <label for="tags">Tags :</label>
+          <input type="text" class="form-control" placeholder="Tags separated by comma ','" name="tags">
+        </div>
+
+        <button type="submit" class="btn btn-default" value="submit" style="width:100%;">Add Word</button>
+
+      </form>
+      <br>
     </div>
-    {% endfor %}
-  </div>
-  {% endif %}
 
-  {% if reading %}
-  <div class = "text-center conatainer">
-  {% for i in list %}
-    <div class = "container">
-      <div class = "item_temp">
-        <h1>{{i.heading}}</h1>
-        <p class="title">{{i.author}}</p>
-        <p class="title">{{i.language}}</p>
-        <a class = "item_link" href = "{% url 'words:full_reading' id=i.id %}">
-        <button class="item_link">Read Full</button>
-        </a>
-        {% if not home %}
-          <a class = "item_link" href = "{% url 'words:update_reading_page' id=i.id %}">
-            <button class="item_link">Edit</button>
-          </a>
-        {% endif %}
-      </div>
-    </div>
-  {% endfor %}
-  </div>
-  {% endif %}
-
-  {% if words %}
-  <div id="bottom_box">
-    {% if prev %}
-    <a class="next_prev_link" href="{% url 'words:prev_words' %}">
-      <div class = "next_prev">
-          <
-      </div>
-    </a>
-    {% endif %}
-    {% if next %}
-    <a class="next_prev_link" href="{% url 'words:next_words' %}">
-      <div class = "next_prev">
-          >
-      </div>
-    </a>
-    {% endif %}
-  </div>
-  {% endif %}
-  
-  <div style="background-color: white;text-align: center;color:white;height: 50px;"></div>
+    <br>
+    <br>
 </body>
 </html>

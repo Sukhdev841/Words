@@ -8,6 +8,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from .models import Word
 from .models import Quote
 from .models import Reading
+from .models import ExceptionWord
 
 from .forms import WordForm
 from .forms import SearchForm
@@ -15,8 +16,13 @@ from .forms import QuoteForm
 
 from django.http import Http404  
 import random
+import json
 
+
+from django.views.decorators.csrf import csrf_exempt,csrf_protect
 # Create your views here.
+
+counter = 0 		# for counting words
 
 def main_page(request):
 	print ("in main view")
@@ -58,12 +64,41 @@ def new_quote_page(request):
 def new_reading_page(request):
 	return render(request,'words/new_word.html',{'new_reading':True})
 
-def all_words_page(request,message=None):
-	all_words = Word.objects.all()
-	if message is None:
-		return render(request,'words/show_words.html',{'list':all_words,'words':True,'page_header':'All Words'})
+def new_passage_word_page(request,word):
+	print("new passage word page")
+	return render(request,'words/new_passage_word.html',{'word':word})
+
+def all_words_page(request,message=None,c=0):
+	all_words_temp = Word.objects.order_by('word')
+	next_ = True
+	prev_ = True
+	global counter
+	print(c)
+	print(counter)
+	#all_words_temp.sort()
+	if c < 0 :
+		print("counter less than 0")
+		all_words = all_words_temp[0:10]
+		counter = 10
+	elif c+10 > len(all_words_temp) and c > 0:
+		print ( "counter is out of limits")
+		all_words = all_words_temp[c:]
+		counter = c + 10
 	else:
-		return render(request,'words/show_words.html',{'list':all_words,'show_message':True,'message':message,'words':True,'page_header':'All Words'})
+		print("counter is in limits")
+		all_words = all_words_temp[c:c+10]
+		counter = c +10
+
+	if counter <= 10:
+		prev_ = False
+
+	if counter >= len(all_words_temp):
+		next_ = False
+	
+	if message is None:
+		return render(request,'words/show_words.html',{'list':all_words,'words':True,'page_header':'All Words','next':next_,'prev':prev_})
+	else:
+		return render(request,'words/show_words.html',{'list':all_words,'show_message':True,'message':message,'words':True,'page_header':'All Words','next':next_,'prev':prev_})
 
 def all_quotes_page(request,message=None):
 	all_quotes = Quote.objects.all()
@@ -114,6 +149,46 @@ def update_reading_page(request,id):
 		print '%s (%s)' % (e.message, type(e))
 		print ("in exception block of update_reading_page")
 		return render(request,'words/new_word.html',{'show_message':True,'message':"Reading not found"})
+
+def passage_words_page(request):
+	if request.method == 'POST':
+		passage = request.POST.get('passage')
+		#print(passage)
+		all_words = Word.objects.values_list('word',flat=True)
+		all_exception_words = ExceptionWord.objects.values_list('word',flat=True)
+
+		# passage_words = passage.split(' ')
+		# for word in passage_words:
+		# 	print (word)
+		passage_words = [passage]
+		delemeters = [' ','.','!','?',',',"'",'"',unichr(96)]
+		for del_ in delemeters:
+			temp_passage_words = []
+			for word in passage_words:
+				temp_passage_words += word.split(del_)
+			passage_words = temp_passage_words
+
+		new_words = []
+
+		for word in passage_words:
+			if word not in all_exception_words and word != '':
+				#print(word +" is not in database")
+				new_words.append(word)
+
+		passage_words = new_words
+		new_words = []
+
+		for word in passage_words:
+			if word not in all_words and word != '':
+				#print(word +" is not in database")
+				new_words.append(word)
+
+		ids = [i for i in range(len(new_words))]
+
+		list_ = zip(new_words,ids)
+		
+
+	return render(request,'words/passage_words.html',{'list':list_,'ids':ids})
 
 
 
@@ -193,6 +268,20 @@ def save_reading(request):
 	else :
 		return main_page(request)
 
+def save_passage_word(request):
+	save_word(request)
+	return HttpResponse("Added")
+
+def add_passage_words_page(request,word):
+	print(word+" is got in add passage word page")
+	#return all_words_page(request)
+	#print (word_x.word + "is parameter to delete_word view")
+	try:
+		return render(request,'words/new_word.html',{'word':word,'new_fix_word':True})
+	except:
+		return render(request,'words/new_word.html',{'show_message':True,"message":'word not found',"edit_word":True})
+
+
 # deletion views
 
 def delete_word(request,word):
@@ -271,6 +360,16 @@ def update_reading(request,id):
 		return render(request,'words/new_word.html',{'id':reading_obj.id,'title':reading_obj.heading,'passage':reading_obj.passage,
 						'author':reading_obj.author,'tags':reading_obj.tags,'language':reading_obj.language,'edit_reading':True,'show_message':True,'message':"Reading successfully updated."})
 
+# next and previous words views
+
+def next_words(request):
+	global counter
+	return all_words_page(request,None,counter)
+
+def prev_words(request):
+	global counter
+	counter = counter - 20
+	return all_words_page(request,None,counter)
 
 
 # other views
@@ -278,6 +377,9 @@ def update_reading(request,id):
 def full_reading(request,id):
 	read = Reading.objects.get(id=id)
 	return render(request,'words/reading.html',{"obj":read})
+
+def process_passage(request):
+	return render(request,'words/process_passage.html')
 
 # for searching
 def search(request):
@@ -324,3 +426,46 @@ def test(request,id):
 	print (id + " is id of quote")
 	print("came in test view")
 	return main_page(request)
+
+class MyClass:
+	i=12345
+
+	def get(self):
+		return self.i
+
+def save_new_passage_word(request):
+	print("saving new passage word (may be 2)")
+	print(request.POST.getlist('values[]'))
+	print(request.POST.getlist('names[]'))
+	values = request.POST.getlist('values[]')
+	names = request.POST.getlist('names[]')
+	word = Word();
+	word.word = values[names.index("word")]
+	word.meaning = values[names.index("meaning")]
+	word.punjabi = values[names.index("punjabi")]
+	word.hindi = values[names.index("hindi")]
+	word.sentence = values[names.index("sentence")]
+	#word.save()
+	mydata = {'word_id':'119'}
+	return HttpResponse(json.dumps(mydata))
+
+def save_new_exception_word(request):
+	print("in save nw exception word")
+	exception_word = ExceptionWord();
+	exception_word.word = request.POST.get('word')
+	exception_word.save();
+	print(exception_word.word+" is saved in database as exceptional word")
+	return HttpResponse("got it")
+
+def test_(request):
+	print(" test_ view executed :) ")
+	#return main_page(request)
+	mydata = [{'foo':1, 'baz':2}]
+	print(request.POST.get('name'))
+	return HttpResponse(json.dumps(mydata))
+	#x = MyClass()
+	#x.i = 908
+	#response={'Price':54,'Cost':'99'}
+   	#return (json.JSONEncoder().encode(response))
+	#return x
+	# HttpResponse(x)

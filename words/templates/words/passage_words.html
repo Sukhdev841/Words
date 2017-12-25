@@ -1,0 +1,175 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>All Words</title>
+  <meta name="showing all words from database" content="words">
+  <meta name="Sukhdev Singh" content="singhsukhdev1415@gmail.com">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  {% load static %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'words/style_words.css' %}">
+  <script src = "{% static 'words/script.js' %}"></script>
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'words/images/favicon.ico' %}" />
+</head>
+
+<body>
+  <div id="new_passage_word_bottom">
+  <div class="block-container">
+    <div class = 'my-header text-center'>
+    <a href="#" style="color: black;text-decoration: none;">
+    Words
+    </a>
+    </div>
+  </div> 
+  <div class='nav-div'>
+    <ul class="nav-bar">
+      {% if not disable_new_quote or home %}
+        <a href="{% url 'words:new_quote_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Quote</li></a>
+      {% endif %}
+      {% if not disable_new_reading or home %}
+        <a href="{% url 'words:new_reading_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Reading</li></a>
+      {% endif %}
+      {% if not disable_new_word or home %}
+      <a href="{% url 'words:new_word_page' %}" class = "nav-list-link"><li class = "nav-list-item move-left">Word</li></a>
+      {% endif %}
+      <!-- {% if not quotes %}
+      <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">Quotes</li></a>
+      {% endif %} -->
+      <!-- {% if not readings %}
+      <a href="#" class = "nav-list-link"><li class = "nav-list-item move-left">Readings..</li></a>
+      {% endif %} -->
+      <div class = "nav-list-link">
+          
+          <form action="{% url 'words:search' %}" enctype="multipart/form-data" method="POST" >
+            <a class="nav-list-link">
+            {%csrf_token%}
+            <li class ="nav-list-item move-left">
+              <input type="text" class="form-control" id="id" placeholder="Search.." name="search_field">
+            </li>
+            </a>
+            <a class="nav-list-link">
+            <li class ="nav-list-item move-left">
+              <button type="submit" class="btn btn-default" value="submit">Search</button>
+            </li>
+            </a>
+       </form>
+          {% if not home %}
+            <a href="{% url 'words:main_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Home</li></a>
+          {% endif %}
+          {% if not words %}
+            <a href="{% url 'words:all_words_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">All Words</li></a>
+          {% endif %}
+          {% if not reading %}
+          <a href="{% url 'words:all_readings_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Readings</li></a>
+          {% endif %}
+          {% if not quotes %}
+            <a href="{% url 'words:all_quotes_page' %}" class = "nav-list-link"><li class = "nav-list-item move-right">Quotes</li></a>
+          {% endif %}
+      
+      </div>
+    </ul>
+  </div>
+
+  
+  {% if page_header %}
+    <div class="page-header text-center">
+      <h1>{{ page_header }}</h1>
+    </div>
+  {% endif %}
+
+  {% if show_message %}
+    <div class="text-center" style="background-color: black;color:white;padding: 5px;">
+      {{message}}
+    </div>
+    <div style="background-color: white;width: 100%;height: 10px;"></div>
+  {% endif %}
+
+  <div class="container" id="new_passage_word_bottom">
+    <div class="form-group" style="text-align: center;">
+        {% for word,id in list %}
+        <div class="after_word_is_added" data={{id}} style="border:1px #dbdbdb solid;overflow: hidden;padding: 10px;width: 40%;margin: 10px auto 10px auto;">
+          <h4 style="display: inline;margin-left:20px;font-family: Georgia, Serif;float: left;">{{word}}</h4>
+          <a href="{% url 'words:update_word_page' word_id=id %}" class="btn btn-success" style="margin-right: 20px;float:right;width:60px;" target="_blank">Edit</a>
+          <img src="{% static 'words/images/check_image.jpg' %}" style="display: inline;width: 30px;height: 30px;margin-right: 25px;float:right;" />
+        </div>
+
+
+        <div class="after_word_is_removed" data={{id}} style="border:1px #dbdbdb solid;overflow: hidden;padding: 10px;width: 40%;margin: 10px auto 10px auto;">
+          <h4 style="display: inline;margin-left: 20px;font-family: Georgia, Serif;float:left;">{{word}}</h4>
+          <button onclick="undo_button_clicked(this)"  data ={{id}} class="btn btn-success" style="margin-right: 20px;float:right;width:60px;background-color:#71a1e8;">Undo</button>
+          <img src="{% static 'words/images/red_check.png' %}" style="display: inline;width: 30px;height: 30px;margin-right: 25px;float:right;" />
+        </div>
+
+        <div class="after_word_is_exception" data={{id}} style="border:1px #dbdbdb solid;overflow: hidden;padding: 10px;width: 40%;margin: 10px auto 10px auto;">
+          <h4 style="display: inline;margin-left: 20px;font-family: Georgia, Serif;float:left;">{{word}}</h4>
+          <!-- <button onclick="undo_button_clicked(this)"  data ={{id}} class="btn" style="margin-right: 20px;float:right;width:60px;background-color:#f2a94b;color:white;">Undo</button> -->
+          <img src="{% static 'words/images/check_sign_yellow.png' %}" style="display: inline;width: 30px;height: 30px;margin-right: 103px;float:right;" />
+        </div>
+
+
+        <table id={{id}} class="table" id="dynamic_field" style=" margin: 20px auto;
+        border:1px #dbdbdb solid;width: 40%;float:both;">
+        <div>
+          <!-- <tr class="after_word_is_added">
+            <td>
+              <h3>{{word}}</h3>
+            </td>
+          </tr>
+          <tr class="after_word_is_added">
+            <td>
+              <button class="btn btn-success">Edit</button>
+            </td>
+          </tr> -->
+          <tr>
+            <td>
+              <input type="text" name="word" class="form-control name-list" value={{word}}>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <input type="text" name="meaning" class="form-control name-list" placeholder="Meaning">
+            </td>
+          </tr>
+            
+          <tr>
+            <td>
+              <input type="text" name="punjabi" class="form-control name-list" placeholder="Punjabi">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="text" name="hindi" class="form-control name-list" placeholder="Hindi">
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <input type="text" name="sentence" class="form-control name-list" placeholder="Sentence">
+            </td>
+          </tr>
+
+          <tr>
+            <td style="text-align: center;">
+              <button onclick="add_button_clicked(this)" data={{id}} class="btn btn-success" word={{word}} url="{% url 'words:save_new_passage_word' %}" token={{csrf_token}} style="float:right;margin-right: 10px;width:80px;">Add</button>
+              <button onclick="exception_button_clicked(this)" data={{id}} class="btn" word={{word}} url="{% url 'words:save-new-exception-word' %}" token={{csrf_token}} style="float:right;margin-right: 10px;width:auto;background-color:#e0dc38; color:white;">Exception</button>
+              <button onclick="remove_button_clicked(this)"  name="remove" data={{id}} class="btn btn-danger" style="float:right;margin-right: 10px;"  >Remove</button>
+              <!-- <button class="btn btn-remove">Advance</button> -->
+            </td>
+          </tr>
+        </div>
+        </table>
+        {% endfor %}
+    </div>
+  </div>
+  </div>
+    <br>
+    <br>
+    <br>
+    <br>
+
+</body>
+</html>

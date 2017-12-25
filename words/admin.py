@@ -6,9 +6,11 @@ from django.contrib import admin
 from words.models import Word
 from words.models import Quote
 from words.models import Reading
+from words.models import ExceptionWord
 
 # Register your models here.
 
 admin.site.register(Word)
 admin.site.register(Quote)
 admin.site.register(Reading)
+admin.site.register(ExceptionWord)
