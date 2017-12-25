@@ -157,10 +157,13 @@ def passage_words_page(request):
 		all_words = Word.objects.values_list('word',flat=True)
 		all_exception_words = ExceptionWord.objects.values_list('word',flat=True)
 
+		all_words = convert_to_lower(all_words)
+		all_exception_words = convert_to_lower(all_exception_words)
 		# passage_words = passage.split(' ')
 		# for word in passage_words:
 		# 	print (word)
 		passage_words = [passage]
+		passage_words = convert_to_lower(passage_words)
 		delemeters = [' ','.','!','?',',',"'",'"',unichr(96)]
 		for del_ in delemeters:
 			temp_passage_words = []
@@ -171,7 +174,7 @@ def passage_words_page(request):
 		new_words = []
 
 		for word in passage_words:
-			if word not in all_exception_words and word != '':
+			if word not in all_exception_words and word != '' and word.isalpha() and len(word) > 1:
 				#print(word +" is not in database")
 				new_words.append(word)
 
@@ -182,6 +185,9 @@ def passage_words_page(request):
 			if word not in all_words and word != '':
 				#print(word +" is not in database")
 				new_words.append(word)
+
+		new_words = list(set(new_words))
+
 
 		ids = [i for i in range(len(new_words))]
 
@@ -381,6 +387,12 @@ def full_reading(request,id):
 def process_passage(request):
 	return render(request,'words/process_passage.html')
 
+def convert_to_lower(string_list):
+	var = []
+	for word in string_list:
+		var.append(word.lower())
+	return var
+
 # for searching
 def search(request):
 	if request.method == 'POST':
@@ -445,8 +457,8 @@ def save_new_passage_word(request):
 	word.punjabi = values[names.index("punjabi")]
 	word.hindi = values[names.index("hindi")]
 	word.sentence = values[names.index("sentence")]
-	#word.save()
-	mydata = {'word_id':'119'}
+	word.save()
+	mydata = {'word_id':word.id}
 	return HttpResponse(json.dumps(mydata))
 
 def save_new_exception_word(request):

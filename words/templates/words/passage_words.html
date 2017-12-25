@@ -99,7 +99,7 @@
 
         <div class="after_word_is_removed" data={{id}} style="border:1px #dbdbdb solid;overflow: hidden;padding: 10px;width: 40%;margin: 10px auto 10px auto;">
           <h4 style="display: inline;margin-left: 20px;font-family: Georgia, Serif;float:left;">{{word}}</h4>
-          <button onclick="undo_button_clicked(this)"  data ={{id}} class="btn btn-success" style="margin-right: 20px;float:right;width:60px;background-color:#71a1e8;">Undo</button>
+          <button onclick="undo_button_clicked(this)"  data ={{id}} class="btn" style="margin-right: 20px;float:right;width:60px;background-color:#71a1e8;color:white;">Undo</button>
           <img src="{% static 'words/images/red_check.png' %}" style="display: inline;width: 30px;height: 30px;margin-right: 25px;float:right;" />
         </div>
 
@@ -110,22 +110,12 @@
         </div>
 
 
-        <table id={{id}} class="table" id="dynamic_field" style=" margin: 20px auto;
+        <table id={{id}} class="table" style=" margin: 20px auto;
         border:1px #dbdbdb solid;width: 40%;float:both;">
         <div>
-          <!-- <tr class="after_word_is_added">
-            <td>
-              <h3>{{word}}</h3>
-            </td>
-          </tr>
-          <tr class="after_word_is_added">
-            <td>
-              <button class="btn btn-success">Edit</button>
-            </td>
-          </tr> -->
           <tr>
             <td>
-              <input type="text" name="word" class="form-control name-list" value={{word}}>
+              <input data={{id}} type="text" name="word" class="form-control name-list" value={{word}}>
             </td>
           </tr>
 
@@ -163,6 +153,7 @@
         </div>
         </table>
         {% endfor %}
+        <button class="btn btn-success" style="width: 40%;margin-top: 30px;">Add All</button>
     </div>
   </div>
   </div>

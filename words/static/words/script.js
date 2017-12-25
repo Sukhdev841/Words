@@ -96,10 +96,13 @@ function add_button_clicked(obj)
 	       //alert(cellVal[0].getAttribute('name'));
 	       names.push(cellVal[0].getAttribute('name'));
 	       cellVal = cellVal[0].value;
+
 	       values.push(cellVal);
 	       //alert(cellVal);
 	   }
 	}
+
+	//alert(values[0]);
 
 	//alert("getting in django");
 	//alert(values);
@@ -134,6 +137,7 @@ function add_button_clicked(obj)
 				{
 					tick_buttons[i].style.display = 'block';
 					a_tag = tick_buttons[i].children[1];
+					tick_buttons[i].children[0].innerHTML= values[0];
 					a_tag.setAttribute("href",location.protocol + '//' + location.host+"/update-word-page/"+word_id);
 					tick_buttons[i].setAttribute("word_id",word_id);
 					//alert("hello");
@@ -175,9 +179,11 @@ function exception_button_clicked(obj)
 {
 	$("#"+obj.getAttribute('data')).hide();
 	var tick_buttons = document.getElementsByClassName("after_word_is_exception");
+	var words = document.getElementsByName("word");
 	//$(".after_word_is_added").css("visibility","visible");
 
 	var i;
+	var word;
 	for(i=0;i<tick_buttons.length;i++)
 	{
 		//tick_buttons[i].css("visibility","visible");
@@ -185,6 +191,8 @@ function exception_button_clicked(obj)
 		if(tick_buttons[i].getAttribute('data')==obj.getAttribute('data'))
 		{
 			tick_buttons[i].style.display = 'block';
+			tick_buttons[i].children[0].innerHTML= words[i].value;
+			word = words[i].value;
 			//alert("hello");
 			//alert(tick_buttons[i].innerHTML);
 			break;
@@ -198,7 +206,7 @@ function exception_button_clicked(obj)
         //type: "POST",
         method:'POST',
           data: {
-          	word:obj.getAttribute('word'),
+          	word:word,
           	csrfmiddlewaretoken : csrftoken
          },
         success: function (data) {        
